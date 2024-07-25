@@ -23,6 +23,10 @@ def mixup(input, target, gamma):
     return input.mul_(gamma).add_(1 - gamma, perm_input), target.mul_(gamma).add_(1 - gamma, perm_target)
 
 
+def cutmix(input, target):
+    # define cutmix function here
+    pass
+
 def clip_grad_norm_(parameters, max_grad):
     if isinstance(parameters, torch.Tensor):
         parameters = [parameters]
