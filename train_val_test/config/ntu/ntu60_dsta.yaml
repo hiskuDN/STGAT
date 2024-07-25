@@ -1,8 +1,8 @@
 data: 'ntu_skeleton'
 data_param:
   train_data_param:
-    data_path: /your/path/to/NTU-RGB-D/DSTA/xsub/train_data_joint.npy
-    label_path: /your/path/to/NTU-RGB-D/DSTA/xsub/train_label.pkl
+    data_path: ./prep_dataset/ntu_60/xsub/train_data_joint.npy
+    label_path: ./prep_dataset/ntu_60/xsub/train_label.pkl
     random_choose: True
     center_choose: False
     window_size: 150
@@ -10,8 +10,8 @@ data_param:
     num_skip_frame:
     decouple_spatial: False
   val_data_param:
-    data_path: /your/path/to/NTU-RGB-D/DSTA/xsub/val_data_joint.npy
-    label_path: /your/path/to/NTU-RGB-D/DSTA/xsub/val_label.pkl
+    data_path: ./prep_dataset/ntu_60/xsub/val_data_joint.npy
+    label_path: ./prep_dataset/ntu_60/xsub/val_label.pkl
     random_choose: False
     center_choose: True
     window_size: 150
@@ -49,7 +49,7 @@ train: 'classify'
 mode: 'train_val'
 loss: 'cross_entropy'
 batch_size: 32
-worker: 32
+worker: 0
 pin_memory: False
 num_epoch_per_save: 10
 model_saved_name: './work_dir/ntu60/baseline'
@@ -58,8 +58,8 @@ pre_trained_model:
 ignore_weights: ['fc']
 label_smoothing_num: 0
 mix_up_num: 0
-device_id: [0,1,2,3]
-cuda_visible_device: '0,1,2,3'
+device_id: [0]
+cuda_visible_device: '0'
 debug: False
 
 # lr

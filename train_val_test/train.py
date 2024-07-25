@@ -7,7 +7,8 @@ import sys
 
 print('Python %s on %s' % (sys.version, sys.platform))
 #sys.path.extend(['../'])
-sys.path.extend(['/home/hulianyu/Code_for_STGAT'])
+sys.path.extend(['../'])
+sys.path.append('./')
 import shutil
 import time
 import json

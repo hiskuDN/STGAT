@@ -2,9 +2,12 @@ import argparse
 import pickle
 from tqdm import tqdm
 import sys
+import os
+sys.path.append('./')
 from dataset.normalize_skeletons import normalize_skeletons
 
 sys.path.extend(['../../'])
+
 training_subjects = [
     1, 2, 4, 5, 8, 9, 13, 14, 15, 16, 17, 18, 19, 25, 27, 28, 31, 34, 35, 38
 ]
@@ -267,9 +270,9 @@ def ske_vis(data, **kwargs):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='NTU-RGB-D Data Converter.')
-    parser.add_argument('--data_path', default='/your/path/to/ntu_60_raw/nturgb+d_skeletons')
+    parser.add_argument('--data_path', default='../ntu-rgb/ntu-60/nturgb+d_skeletons')
     parser.add_argument('--ignored_sample_path',
-                        default='/your/path/to/ntu_60_raw/samples_with_missing_skeletons.txt')
+                        default='../ntu-rgb/samples_with_missing_skeletons.txt')
     parser.add_argument('--out_folder', default='/your/path/to/ntu_60/')
 
     benchmark = ['xsub', 'xview']

@@ -2,6 +2,7 @@ import argparse
 import pickle
 import os
 import sys
+sys.path.append('./')
 from prepare.ntu_60.gendata import gendata
 
 sys.path.extend(['../../'])
@@ -21,9 +22,9 @@ channel_name = ['x', 'y', 'z', 'colorX', 'colorY']
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='NTU-RGB-D Data Converter.')
-    parser.add_argument('--data_path', default='/your/path/to/ntu_120_raw/')
+    parser.add_argument('--data_path', default='../ntu-rgb/ntu-120')
     parser.add_argument('--ignored_sample_path',
-                        default='/your/path/to/ntu_120_raw/samples_with_missing_skeletons_120.txt')
+                        default='../ntu-rgb/samples_with_missing_skeletons_120.txt')
     parser.add_argument('--out_folder', default='/your/path/to/ntu_120/')
 
     benchmark = ['xset', 'xsub']
