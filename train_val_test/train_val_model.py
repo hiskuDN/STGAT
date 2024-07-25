@@ -27,6 +27,10 @@ def cutmix(input, target):
     # define cutmix function here
     pass
 
+def cutout(input, target):
+    # define cutout function here
+    pass
+
 def clip_grad_norm_(parameters, max_grad):
     if isinstance(parameters, torch.Tensor):
         parameters = [parameters]
