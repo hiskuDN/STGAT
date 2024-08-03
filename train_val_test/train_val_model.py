@@ -22,7 +22,6 @@ def to_onehot(num_class, label, alpha):
 
 
 def mixup(input, target, gamma):
-    print("Mixup")
     # target is onehot format!
     perm = torch.randperm(input.size(0))
     perm_input = input[perm]
@@ -45,7 +44,6 @@ def cutmix(input, target, beta=1.0):
     - input (torch.Tensor): The input data with CutMix applied.
     - target (torch.Tensor): The mixed target labels.
     """
-    print("CutMix")
     batch_size, channels, sequence_length, joints, _ = input.size()
     
     # Sample lambda from beta distribution
@@ -88,7 +86,6 @@ def random_cutout(input, target, cutout_length):
     - input (torch.Tensor): The input data with random cutout applied.
     - target (torch.Tensor): The target labels unchanged.
     """
-    print("Random Cutout")
     batch_size, channels, sequence_length, joints, _ = input.size()
 
     for i in range(batch_size):
