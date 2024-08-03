@@ -22,6 +22,7 @@ def to_onehot(num_class, label, alpha):
 
 
 def mixup(input, target, gamma):
+    print("Mixup")
     # target is onehot format!
     perm = torch.randperm(input.size(0))
     perm_input = input[perm]
@@ -31,9 +32,47 @@ def mixup(input, target, gamma):
     )
 
 
-def cutmix(input, target):
-    # define cutmix function here
-    pass
+def cutmix(input, target, beta=1.0):
+    """
+    Apply CutMix augmentation to the input data.
+
+    Parameters:
+    - input (torch.Tensor): The input data of shape (batch_size, channels, sequence_length, joints, 2).
+    - target (torch.Tensor): The target labels in one-hot format.
+    - beta (float): The parameter for the beta distribution used to sample the mix ratio.
+
+    Returns:
+    - input (torch.Tensor): The input data with CutMix applied.
+    - target (torch.Tensor): The mixed target labels.
+    """
+    print("CutMix")
+    batch_size, channels, sequence_length, joints, _ = input.size()
+    
+    # Sample lambda from beta distribution
+    lam = np.random.beta(beta, beta)
+    
+    # Randomly select another sample in the batch
+    rand_index = torch.randperm(batch_size)
+    
+    # Get coordinates for the cutout box
+    cutout_length = int(sequence_length * lam)
+    cutout_joints = int(joints * lam)
+    cutout_sequence_start = random.randint(0, sequence_length - cutout_length)
+    cutout_joints_start = random.randint(0, joints - cutout_joints)
+    
+    # Create the new input and target
+    input_cutmix = input.clone()
+    for i in range(batch_size):
+        # CutMix the input
+        input_cutmix[i, :, cutout_sequence_start:cutout_sequence_start + cutout_length, 
+                     cutout_joints_start:cutout_joints_start + cutout_joints, :] = \
+                     input[rand_index[i], :, cutout_sequence_start:cutout_sequence_start + cutout_length, 
+                           cutout_joints_start:cutout_joints_start + cutout_joints, :]
+        
+        # Mix the target labels
+        target[i] = target[i] * lam + target[rand_index[i]] * (1 - lam)
+    
+    return input_cutmix, target
 
 
 def random_cutout(input, target, cutout_length):
@@ -49,6 +88,7 @@ def random_cutout(input, target, cutout_length):
     - input (torch.Tensor): The input data with random cutout applied.
     - target (torch.Tensor): The target labels unchanged.
     """
+    print("Random Cutout")
     batch_size, channels, sequence_length, joints, _ = input.size()
 
     for i in range(batch_size):
