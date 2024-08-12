@@ -134,7 +134,7 @@ def train_classifier(
             # inputs, targets = mixup(
             #     inputs, targets, np.random.beta(args.mix_up_num, args.mix_up_num)
             # )
-            inputs, targets = random_cutout(inputs, targets, 16)
+            inputs, targets = random_cutout(inputs, targets, 5)
         elif args.label_smoothing_num != 0 or args.loss == "cross_entropy_naive":
             targets = to_onehot(args.class_num, labels, args.label_smoothing_num)
         else:
