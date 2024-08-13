@@ -73,13 +73,12 @@ def cutmix(input, target, beta=1.0):
     return input_cutmix, target
 
 
-def random_cutout(input, target, cutout_length):
+def random_cutout(input, cutout_length):
     """
     Apply random cutout to the input data.
 
     Parameters:
     - input (torch.Tensor): The input data of shape (batch_size, channels, sequence_length, joints, 2).
-    - target (torch.Tensor): The target labels.
     - cutout_length (int): The length of the cutout segment.
 
     Returns:
@@ -96,7 +95,7 @@ def random_cutout(input, target, cutout_length):
         # Apply cutout by setting the selected segment to zero
         input[i, :, start_idx:end_idx, :, :] = 0
 
-    return input, target
+    return input
 
 
 def clip_grad_norm_(parameters, max_grad):
@@ -130,16 +129,25 @@ def train_classifier(
         # label_onehot = to_onehot(args.class_num, labels, args.label_smoothing_num)
         if args.mix_up_num > 0:
             # self.print_log('using mixup data: ', self.arg.mix_up_num)
-            targets = to_onehot(args.class_num, labels, args.label_smoothing_num)
+            
+            # mixup
+            # targets = to_onehot(args.class_num, labels, args.label_smoothing_num)
             # inputs, targets = mixup(
             #     inputs, targets, np.random.beta(args.mix_up_num, args.mix_up_num)
             # )
-            inputs, targets = random_cutout(inputs, targets, 5)
+            
+            # random cutout
+            aug_inputs = random_cutout(inputs, 1)
+            aug_targets = labels
         elif args.label_smoothing_num != 0 or args.loss == "cross_entropy_naive":
             targets = to_onehot(args.class_num, labels, args.label_smoothing_num)
         else:
             targets = labels
 
+        # random cutout, merge inputs with augmented inputs
+        inputs = torch.cat((inputs, aug_inputs), dim=0)
+        targets = torch.cat((targets, aug_targets), dim=0)
+        
         # inputs, labels = Variable(inputs.cuda(non_blocking=True)), Variable(labels.cuda(non_blocking=True))
         inputs, targets, labels = (
             inputs.cuda(non_blocking=True),
