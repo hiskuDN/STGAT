@@ -151,6 +151,7 @@ def train_classifier(
             targets_onehot = torch.cat((targets_onehot, aug_targets), dim=0)
             
             targets = targets_onehot
+            labels = targets
             
         
         elif args.label_smoothing_num != 0 or args.loss == "cross_entropy_naive":
