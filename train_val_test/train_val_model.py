@@ -129,20 +129,27 @@ def train_classifier(
         # label_onehot = to_onehot(args.class_num, labels, args.label_smoothing_num)
         if args.mix_up_num > 0:
             # self.print_log('using mixup data: ', self.arg.mix_up_num)
+            targets_onehot = to_onehot(args.class_num, labels, args.label_smoothing_num)
             
             # mixup
-            # targets = to_onehot(args.class_num, labels, args.label_smoothing_num)
             # inputs, targets = mixup(
-            #     inputs, targets, np.random.beta(args.mix_up_num, args.mix_up_num)
+            #     inputs, targets_onehot, np.random.beta(args.mix_up_num, args.mix_up_num)
             # )
             
             # random cutout
-            aug_inputs = random_cutout(inputs, 1)
+            # aug_inputs = random_cutout(inputs, 1)
+            
+            # inputs = torch.cat((inputs, aug_inputs), dim=0)
+            # targets = torch.cat((labels, labels), dim=0)
+            
+            # labels = targets
+            
+            # cutmix
+            aug_inputs, aug_targets = cutmix(inputs, targets_onehot)
             
             inputs = torch.cat((inputs, aug_inputs), dim=0)
-            targets = torch.cat((labels, labels), dim=0)
+            targets_onehot = torch.cat((targets_onehot, aug_targets), dim=0)
             
-            labels = targets
         
         elif args.label_smoothing_num != 0 or args.loss == "cross_entropy_naive":
             targets = to_onehot(args.class_num, labels, args.label_smoothing_num)
